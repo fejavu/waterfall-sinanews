@@ -1,0 +1,106 @@
+html,body,div,h4,ul {
+  margin: 0;
+  padding: 0;
+  font-family:  'Noto sans TC', sans-serif;
+  box-sizing: border-box;
+}
+
+ul,li {
+  list-style:none;
+}
+
+a {
+  text-decoration: none;
+  color: black
+}
+h1 {
+  margin-left: 10px;
+}
+.layout {
+  width: 900px;
+  margin: 0 auto;
+  /* border: 1px red solid; */
+  padding: 5px;
+}
+
+.news-ct {
+  position: relative;  
+  /* border: 1px green solid; */  
+}    
+
+.news-ct a {
+  position: absolute;
+}
+
+.news-ct a:first-child {
+  display: none;
+}
+
+.item {
+  margin: 10px 0 0 10px;
+  border: 1px solid #ccc;
+  background: white;
+  width: 220px;
+  border-radius: 4px;
+  padding: 10px;
+  /* box-shadow: 0 4px 8px 0px rgba(0,0,0,.3); */
+  transition: all .5s;
+}
+
+.item:hover {
+  border: 1px solid #aaa;
+  box-shadow: 0 6px 14px 0px rgba(0,0,0,.5);
+  transition: all .5s;
+}
+
+.item img {
+  width: 220px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+}
+
+.item h4 {
+  font-size: 20px;
+}
+
+.item .summary {
+  margin-top: 3px;
+  font-size: 14px;
+  color: #666;
+}
+
+.load-tag {
+  visibility: hidden;
+}
+
+.top {
+  position: fixed;
+  /* position: absolute; */
+  /* display:none; */
+  right: 110px;
+  bottom: 60px; 
+}
+
+.top button {
+  background-color:#fff;
+  border: 1px #ddd solid;
+  border-radius: 4px;     
+  cursor: pointer;      
+  padding:5px 8px;      
+  font-size: 16px;
+  font-weight: bold;
+  color:red;
+}
+
+.top  button:hover {
+  opacity: 1; 
+  box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 
+  0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: all 0.2s;
+}
+
+.header:after {
+  content: '';
+  display: block;
+  clear: both;
+}
