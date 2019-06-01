@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Sina News</title>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="news.png">
+  <style>
+    html,body,div,h4,ul {
+      margin: 0;
+      padding: 0;
+      font-family:  'Noto sans TC', sans-serif;
+      box-sizing: border-box;
+    }
+
+    ul,li {
+      list-style:none;
+    }
+
+    a {
+      text-decoration: none;
+      color: black
+    }
+    h1 {
+      margin-left: 10px;
+    }
+    .layout {
+      width: 900px;
+      margin: 0 auto;
+      /* border: 1px red solid; */
+      padding: 5px;
+    }
+
+    .news-ct {
+      position: relative;  
+      /* border: 1px green solid; */  
+    }    
+
+    .news-ct a {
+      position: absolute;
+    }
+
+    .news-ct a:first-child {
+      display: none;
+    }
+
+    .item {
+      margin: 10px 0 0 10px;
+      border: 1px solid #ccc;
+      background: white;
+      width: 220px;
+      border-radius: 4px;
+      padding: 10px;
+      /* box-shadow: 0 4px 8px 0px rgba(0,0,0,.3); */
+      transition: all .5s;
+    }
+
+    .item:hover {
+      border: 1px solid #aaa;
+      box-shadow: 0 6px 14px 0px rgba(0,0,0,.5);
+      transition: all .5s;
+    }
+
+    .item img {
+      width: 220px;
+      border-radius: 4px;
+      margin-bottom: 3px;
+    }
+
+    .item h4 {
+      font-size: 20px;
+    }
+
+    .item .summary {
+      margin-top: 3px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .load-tag {
+      visibility: hidden;
+    }
+
+    .top {
+      position: fixed;
+      /* position: absolute; */
+      /* display:none; */
+      right: 110px;
+      bottom: 60px; 
+    }
+
+    .top button {
+      background-color:#fff;
+      border: 1px #ddd solid;
+      border-radius: 4px;     
+      cursor: pointer;      
+      padding:5px 8px;      
+      font-size: 16px;
+      font-weight: bold;
+      color:red;
+    }
+
+    .top  button:hover {
+      opacity: 1; 
+      box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 
+      0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      transition: all 0.2s;
+    }
+
+    .header:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <h1>News Flow</h1>
+    <div class="water-fall">
+      <ul class="news-ct ">
+        <a href="http://slide.ent.sina.com.cn/star/slide_4_704_314940.html/d/2" target="_blank">
+          <li class="item">
+            <img src="https://k.sinaimg.cn/n/ent/4_img/upload/d411fbc6/90/w497h393/20190530/d176-hxsrwwr1957967.jpg/w640slw.jpg" alt="">
+            <h4>港圈女神婚纱照集锦</h4>
+            <div class="summary">组图：港圈女神婚纱照集锦 盘点那些年香港电影里的天然美女</div>
+          </li>
+        </a>
+        <li class="load-tag">A tag of loading</li>
+      </ul>
+    </div>
+    <div class="top">
+      <button>TOP</button>
+    </div>
+  </div>
+  <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript">
+    
+    // top click
+    $(".top").on("click", function() {
+      $('html, body').animate({
+        scrollTop: 0
+      }, 'slow');
+      return false;
+    });
+
+    var reqObj = {
+      init: function() {
+        var _this = this;
+        _this.start();
+        _this.bind(_this.scroll, 500);
+        this.itemWidth = $(".item").outerWidth(true);
+        this.ctWidth = $(".news-ct").width();
+        this.colNum = Math.floor(this.ctWidth / this.itemWidth);
+        this.colHeightArr = [];
+        //     console.log(this.itemWidth);
+        //     console.log(this.ctWidth);
+        //     console.log(this.colNum);
+        this.pageIdx = 1;
+        this.itemsCount = 10;
+        for (var i = 0; i < this.colNum; i++) {
+          this.colHeightArr[i] = 0;
+        }
+        // _this.start();
+      },
+
+      start: function() {
+        var _this = this;
+        _this.getData(function(newslist) {
+          $.each(newslist, function(idx, item) {
+            var $node = _this.generateNode(item);
+            $node.find("img").on('load', function() {
+              $node.appendTo(".news-ct");
+              //console.log($node.find(".item").outerHeight());
+              // console.log($node.height());
+              _this.waterFall($node);
+            });
+          });
+        });
+      },
+
+      getData: function(callback) {
+        var _this = this;
+        console.log("getdata fun");
+        console.log("pageindex: " + _this.pageIdx);
+        $.ajax({
+          url: "https://photo.sina.cn/aj/v2/index?cate=girl",
+          dataType: 'jsonp',
+          jsonp: "callback",
+          data: {
+            page: _this.pageIdx,
+            pagesize: _this.itemsCount
+          }
+        }).done(function(result) {
+          if (result && result.code == 1) {
+            callback(result.data);
+            _this.pageIdx++;
+          } else {
+            console.log("failed to get data");
+          }
+        });
+      },
+
+      generateNode: function(item) {
+
+        var $node = $(`<a href="" class="link"target="_blank"><li class="item"><img src="" alt=""><h4></h4><div class="summary"></div></li></a>`);
+        $node.attr('href', item.url);
+        $node.find(".item img").attr('src', item.thumb);
+        $node.find(".item h4").text(item.stitle);
+        $node.find(".summary").text(item.title);
+        console.log(item.url);
+        // console.log($node);
+        console.log($node.attr('href'));
+        return $node;
+      },
+
+      waterFall: function($node) {
+        // console.log("waterfall run");
+        var _this = this;
+        var minIdx = 0;
+        var minHeight = _this.colHeightArr[0];
+        for (var i = 0; i < _this.colHeightArr.length; i++) {
+          if (_this.colHeightArr[i] < minHeight) {
+            minHeight = _this.colHeightArr[i];
+            minIdx = i;
+          }
+        }
+        $node.css({
+          top: minHeight,
+          left: _this.itemWidth * minIdx
+        });
+        //    console.log(minIdx);   
+        //    console.log(minHeight);
+        //    console.log(_this.colHeightArr);   
+        //    console.log($node.find(".item").outerHeight(true));
+
+        _this.colHeightArr[minIdx] += $node.find(".item").outerHeight(true);
+        $(".news-ct").height(Math.max.apply(null, _this.colHeightArr));
+        //console.log("height"+$(".news-ct").height());
+      },
+
+      bind: function() {
+        console.log("bind function");
+        var _this = this;
+        $(window).on('scroll', _this.debounce());
+
+      },
+
+      debounce: function() {
+        var _this = this;
+        var timer = null;
+        return function() {
+          clearTimeout(timer);
+          timer = setTimeout(function() {
+            if (_this.bottomShow()) {
+              _this.start();
+            }
+          }, 500);
+        };
+      },
+
+      bottomShow: function() {
+        var eleHeight = $(".load-tag").offset().top + $(".news-ct").height();
+        var scrollTop = $(window).scrollTop();
+        var windowHeight = $(window).height();
+        return eleHeight < (scrollTop + windowHeight + 150);
+      }
+    };
+
+    reqObj.init();
+  </script>
+</body>
+</html>
