@@ -1,30 +1,25 @@
 
 // top click
 $(".top").on("click", function() {
-$('html, body').animate({
-  scrollTop: 0
-}, 'slow');
-return false;
+  $('html, body').animate({
+    scrollTop: 0
+  }, 'slow');
+  return false;
 });
 
 var reqObj = {
   init: function() {
-    var _this = this;
-    _this.start();
-    _this.bind(_this.scroll, 500);
     this.itemWidth = $(".item").outerWidth(true);
     this.ctWidth = $(".news-ct").width();
     this.colNum = Math.floor(this.ctWidth / this.itemWidth);
     this.colHeightArr = [];
-    //     console.log(this.itemWidth);
-    //     console.log(this.ctWidth);
-    //     console.log(this.colNum);
     this.pageIdx = 1;
     this.itemsCount = 10;
+    this.start();
+    this.bind();
     for (var i = 0; i < this.colNum; i++) {
       this.colHeightArr[i] = 0;
     }
-    // _this.start();
   },
 
   start: function() {
@@ -34,8 +29,6 @@ var reqObj = {
         var $node = _this.generateNode(item);
         $node.find("img").on('load', function() {
           $node.appendTo(".news-ct");
-          //console.log($node.find(".item").outerHeight());
-          // console.log($node.height());
           _this.waterFall($node);
         });
       });
@@ -44,10 +37,10 @@ var reqObj = {
 
   getData: function(callback) {
     var _this = this;
-    console.log("getdata fun");
-    console.log("pageindex: " + _this.pageIdx);
+    //console.log("getdata fun");
+    // console.log("pageindex: " + _this.pageIdx);
     $.ajax({
-      url: "https://photo.sina.cn/aj/v2/index?cate=girl",
+      url: "https://photo.sina.cn/aj/v2/index?cate=military",
       dataType: 'jsonp',
       jsonp: "callback",
       data: {

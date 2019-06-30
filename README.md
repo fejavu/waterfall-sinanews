@@ -1,7 +1,7 @@
 # waterfall-sinanews
 ## 懒加载机制和瀑布流结合
 [预览链接](https://fejavu.github.io/waterfall-sinanews/index.html)
-[预览链接](http://js.jirengu.com/deyiviqazu/1)
+[预览链接](http://js.jirengu.com/vuwigitobu)
 
 ## 懒加载原理
 懒加载的目的是为了加快对资源的请求，减少请求的时间，减少用户等待的时间，从而提高用户体验。
